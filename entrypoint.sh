@@ -448,7 +448,7 @@ perform_device_auth() {
     # Send Discord notification with verification link
     send_discord_notification \
         "🔐 Hytale Server Authentication Required" \
-        "The server needs authentication to start.\n\n**Code:** \`${user_code}\`\n\n**Click the link below or visit:** ${verification_uri}" \
+        $'The server needs authentication to start.\n\n**Code:** `'"${user_code}"$'`\n\n**Click the link below or visit:** '"${verification_uri}" \
         "16776960" \
         "$verification_uri_complete"
 
