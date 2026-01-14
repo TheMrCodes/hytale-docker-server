@@ -857,9 +857,9 @@ start_server() {
     fi
 
     log_info "Executing: java $jvm_args -jar HytaleServer.jar $server_args"
-    java $jvm_args -jar HytaleServer.jar $server_args
-#    SERVER_PID=$!
-#    wait "$SERVER_PID"
+    java $jvm_args -jar HytaleServer.jar $server_args &
+    SERVER_PID=$!
+    wait "$SERVER_PID"
 }
 
 main() {
