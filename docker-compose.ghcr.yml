@@ -1,0 +1,63 @@
+# ==============================================================================
+# Hytale Docker Server - Pre-built Image (GHCR)
+# ==============================================================================
+# Use this file with the pre-built image from GitHub Container Registry.
+# Download: curl -O https://raw.githubusercontent.com/TheMrCodes/hytale-docker-server/main/docker-compose.ghcr.yml
+# Rename:   mv docker-compose.ghcr.yml docker-compose.yml
+# ==============================================================================
+
+services:
+  hytale-server:
+    image: ghcr.io/themrcodes/hytale-docker-server:latest
+    container_name: hytale-server
+    
+    # Hytale uses QUIC protocol over UDP
+    ports:
+      - "5520:5520/udp"
+    
+    # Load configuration from .env file
+    env_file:
+      - .env
+    
+    # Persistent storage
+    volumes:
+      # Credentials (bind mounts for security)
+      - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json:ro
+      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
+      
+      # Server data (named volumes)
+      - hytale-server-files:/server/server-files    # Server JAR and assets
+      - hytale-universe:/server/universe            # World data
+      - hytale-mods:/server/mods                    # Mods
+      - hytale-config:/server/config                # Configuration
+      - hytale-aot-cache:/server/.aot-cache         # Java AOT cache
+    
+    # Required for interactive authentication
+    stdin_open: true
+    tty: true
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits (adjust as needed)
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+        reservations:
+          memory: 4G
+    
+    # Health check
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f HytaleServer.jar || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+volumes:
+  hytale-server-files:
+  hytale-universe:
+  hytale-mods:
+  hytale-config:
+  hytale-aot-cache:

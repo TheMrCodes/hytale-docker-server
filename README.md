@@ -10,6 +10,7 @@ A fully automated Docker container for hosting Hytale game servers with OAuth au
 - **Persistent Storage** - Separate volumes for server files, world data, mods, and config
 - **Java AOT Caching** - Faster server startup after initial run
 - **Non-root Container** - Runs as unprivileged user for security
+- **Multi-platform** - Supports `linux/amd64` and `linux/arm64`
 - **Configurable** - All settings via environment variables
 
 ## Quick Start
@@ -20,21 +21,72 @@ A fully automated Docker container for hosting Hytale game servers with OAuth au
 - A Hytale account with server access
 - Existing `hytale-downloader` credentials file (from initial setup)
 
-### 1. Clone the Repository
+### Option A: Use Pre-built Image (Recommended)
+
+```bash
+# Create project directory
+mkdir hytale-server && cd hytale-server
+
+# Download configuration files
+curl -O https://raw.githubusercontent.com/TheMrCodes/hytale-docker-server/main/.env.example
+curl -O https://raw.githubusercontent.com/TheMrCodes/hytale-docker-server/main/docker-compose.ghcr.yml
+mv docker-compose.ghcr.yml docker-compose.yml
+
+# Configure
+cp .env.example .env
+# Edit .env with your settings
+
+# Add your credentials
+cp ~/.hytale-downloader-credentials.json .hytale-downloader-credentials.json
+
+# Start server
+docker compose up
+```
+
+Or create your own `docker-compose.yml`:
+
+```yaml
+services:
+  hytale-server:
+    image: ghcr.io/themrcodes/hytale-docker-server:latest
+    ports:
+      - "5520:5520/udp"
+    env_file:
+      - .env
+    volumes:
+      - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json:ro
+      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
+      - hytale-server-files:/server/server-files
+      - hytale-universe:/server/universe
+      - hytale-mods:/server/mods
+      - hytale-config:/server/config
+    stdin_open: true
+    tty: true
+
+volumes:
+  hytale-server-files:
+  hytale-universe:
+  hytale-mods:
+  hytale-config:
+```
+
+### Option B: Build from Source
+
+#### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/TheMrCodes/hytale-docker-server.git
 cd hytale-docker-server
 ```
 
-### 2. Configure Environment
+#### 2. Configure Environment
 
 ```bash
 cp .env.example .env
 # Edit .env with your settings
 ```
 
-### 3. Add Downloader Credentials
+#### 3. Add Downloader Credentials
 
 Copy your existing credentials file to the project directory:
 
@@ -44,7 +96,7 @@ cp ~/.hytale-downloader-credentials.json .hytale-downloader-credentials.json
 
 Or run `hytale-downloader` once to generate credentials.
 
-### 4. Start the Server (First Time)
+#### 4. Start the Server (First Time)
 
 Run interactively to complete server authentication:
 
@@ -57,7 +109,7 @@ Follow the on-screen instructions to authenticate:
 2. Enter the verification code
 3. Authorize the server
 
-### 5. Run in Background
+#### 5. Run in Background
 
 After initial authentication, run detached:
 
