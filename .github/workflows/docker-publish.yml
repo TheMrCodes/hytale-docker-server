@@ -11,11 +11,17 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'Dockerfile'
+      - 'entrypoint.sh'
     tags:
       - 'v*'
   pull_request:
     branches:
       - main
+    paths:
+      - 'Dockerfile'
+      - 'entrypoint.sh'
   release:
     types: [published]
   workflow_dispatch:
