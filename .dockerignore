@@ -1,0 +1,29 @@
+# Credentials (never include in image)
+.hytale-downloader-credentials.json
+*.credentials.json
+
+# Environment files
+.env
+.env.*
+
+# Downloaded files
+*.zip
+!entrypoint.sh
+
+# Local development
+docker-compose.yml
+docker-compose*.yml
+
+# Documentation
+*.md
+README*
+LICENSE
+
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp

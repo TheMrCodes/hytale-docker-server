@@ -1,0 +1,59 @@
+# ==============================================================================
+# Hytale Server - Local Development
+# ==============================================================================
+# For testing the Docker image locally before deploying to Fly.io
+# ==============================================================================
+
+services:
+  hytale-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: hytale-server
+
+    # Enable interactive console access (docker attach hytale-server)
+    stdin_open: true
+    tty: true
+
+    ports:
+      - "5520:5520/udp"
+
+    env_file:
+      - .env
+
+    volumes:
+      # Credentials file for downloader (writable for token refresh)
+      # Note: Run docker-compose from this directory, or use absolute path
+      - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json
+      # Server authentication credentials (created on first auth, persisted for reuse)
+      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
+      # Persist server files (HytaleServer.jar, Assets.zip, etc.) to avoid re-download
+      - hytale-server-files:/server/server-files
+      # Persist world data between restarts
+      - hytale-universe:/server/universe
+      # Persist mods
+      - hytale-mods:/server/mods
+      # Persist server configuration
+      - hytale-config:/server/config
+      # Persist AOT cache
+      - hytale-aot-cache:/server/.aot-cache
+
+    # Restart policy for development
+    restart: unless-stopped
+
+    # Resource limits (optional, for local testing)
+    deploy:
+      resources:
+        limits:
+          memory: 5G
+        reservations:
+          memory: 4G
+
+volumes:
+  hytale-server-files:
+  hytale-universe:
+  hytale-mods:
+  hytale-config:
+  hytale-aot-cache:
+

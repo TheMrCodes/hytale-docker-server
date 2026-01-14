@@ -1,0 +1,41 @@
+# ==============================================================================
+# Hytale Docker Server - Git Ignore
+# ==============================================================================
+
+# Environment and credentials (NEVER commit these!)
+.env
+.hytale-downloader-credentials.json
+.hytale-server-credentials.json
+
+# Downloaded server files and binaries
+hytale-downloader
+hytale-downloader.exe
+hytale-downloader-linux-amd64
+hytale-downloader-windows-amd64.exe
+*.zip
+
+# Server data (use Docker volumes instead)
+server-files/
+universe/
+mods/
+config/
+logs/
+
+# Docker volumes data
+.aot-cache/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.bak
+*.log
