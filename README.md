@@ -310,3 +310,13 @@ MIT License - See [LICENSE](LICENSE) for details.
 - [Hytale](https://hytale.com) - The game
 - [Eclipse Temurin](https://adoptium.net) - Java runtime
 - [hytale-downloader](https://downloader.hytale.com) - Official server file downloader
+
+---
+
+## Disclaimer
+
+**This is a hobby project** provided "as is" without warranty of any kind, express or implied. Use at your own risk. The authors are not responsible for any damages, data loss, or issues arising from the use of this software.
+
+This project was mostly **vibe coded** with AI assistance (even with professional oversight). While efforts have been made to ensure functionality and security, the code may contain bugs, inefficiencies, or unconventional patterns. Community contributions and improvements are welcome!
+
+This project is not affiliated with, endorsed by, or associated with Hypixel Studios or Hytale.
