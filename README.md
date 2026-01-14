@@ -56,15 +56,13 @@ services:
     volumes:
       - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json:ro
       - hytale-server-files:/server/server-files
-      - hytale-universe:/server/universe
       - hytale-mods:/server/mods
-      - hytale-config:/server/config  # Server auth credentials stored here
+      - hytale-config:/server/config
     stdin_open: true
     tty: true
 
 volumes:
   hytale-server-files:
-  hytale-universe:
   hytale-mods:
   hytale-config:
 ```
@@ -156,15 +154,96 @@ When authentication is required, you'll receive a Discord message with:
 | `always` | Force download server files on every startup |
 | `never` | Never download, use existing files only |
 
+## Mods
+
+Server mods are stored in the `hytale-mods` volume, mounted at `/server/mods` inside the container.
+
+### Installing Mods
+
+1. Copy mod files into the running container:
+   ```bash
+   docker cp ./my-mod.jar hytale-server:/server/mods/
+   ```
+
+2. Or use a bind mount in `docker-compose.yml` for easier management:
+   ```yaml
+   volumes:
+     - ./mods:/server/mods
+   ```
+
+3. Restart the server to load mods:
+   ```bash
+   docker compose restart
+   ```
+
+## World Management
+
+World data is stored inside the `hytale-server-files` volume at `/server/server-files/universe/worlds/`.
+
+### World Structure
+
+```
+/server/server-files/universe/
+├── memories.json
+├── players/          # Player data
+└── worlds/
+    └── default/      # Default world
+        ├── chunks/
+        ├── config.json
+        └── resources/
+```
+
+### Importing a World
+
+To import an existing world (replacing the default world):
+
+1. **Stop the server:**
+   ```bash
+   docker compose down
+   ```
+
+2. **Copy your world into the volume:**
+   ```bash
+   # Remove existing default world and copy new one
+   docker run --rm \
+     -v hytale_hytale-server-files:/data \
+     -v "$(pwd)/YourWorldFolder:/src:ro" \
+     alpine sh -c "rm -rf /data/universe/worlds/default && cp -r /src /data/universe/worlds/default"
+   ```
+
+3. **Start the server:**
+   ```bash
+   docker compose up -d
+   ```
+
+### Backing Up World Data
+
+```bash
+# Create a backup of all world data
+docker run --rm \
+  -v hytale_hytale-server-files:/data:ro \
+  -v "$(pwd):/backup" \
+  alpine tar -czf /backup/universe-backup.tar.gz -C /data universe
+```
+
+### Restoring from Backup
+
+```bash
+docker compose down
+docker run --rm \
+  -v hytale_hytale-server-files:/data \
+  -v "$(pwd):/backup:ro" \
+  alpine sh -c "rm -rf /data/universe && tar -xzf /backup/universe-backup.tar.gz -C /data"
+docker compose up -d
+```
+
 ## Docker Volumes
 
 | Volume | Purpose |
 |--------|---------|
-| `hytale-server-files` | Server JAR and assets (~3.5GB) |
-| `hytale-universe` | World/universe data |
-| `hytale-mods` | Server mods |
-| `hytale-config` | Server configuration |
-| `hytale-aot-cache` | Java AOT compilation cache |
+| `hytale-server-files` | Server JAR, assets, and world data (~3.5GB) |
+| `hytale-mods` | Server mods (place `.jar` or mod folders here) |
+| `hytale-config` | Server configuration and auth credentials |
 
 ## Commands
 
