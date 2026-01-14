@@ -56,12 +56,11 @@ COPY --chmod=755 entrypoint.sh /entrypoint.sh
 EXPOSE 5520/udp
 
 # Default environment variables
-# Note: SERVER_PASSWORD default is empty (not a secret), AUTH_MODE is a mode name
+# Note: SERVER_PASSWORD and AUTH_MODE are set in entrypoint.sh to avoid
+# false-positive security warnings from Hadolint (SecretsUsedInArgOrEnv)
 ENV SERVER_NAME="Hytale Server - (Dealer Node)"
-ENV SERVER_PASSWORD=""
 ENV MAX_PLAYERS=10
 ENV MEMORY_MB=4096
-ENV AUTH_MODE=authenticated
 ENV VIEW_DISTANCE=10
 ENV UPDATE_MODE=auto
 ENV ENABLE_AOT=true
