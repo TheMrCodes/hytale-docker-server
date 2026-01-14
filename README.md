@@ -55,11 +55,10 @@ services:
       - .env
     volumes:
       - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json:ro
-      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
       - hytale-server-files:/server/server-files
       - hytale-universe:/server/universe
       - hytale-mods:/server/mods
-      - hytale-config:/server/config
+      - hytale-config:/server/config  # Server auth credentials stored here
     stdin_open: true
     tty: true
 

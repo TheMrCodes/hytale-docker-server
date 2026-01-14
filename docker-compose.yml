@@ -26,15 +26,13 @@ services:
       # Credentials file for downloader (writable for token refresh)
       # Note: Run docker-compose from this directory, or use absolute path
       - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json
-      # Server authentication credentials (created on first auth, persisted for reuse)
-      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
       # Persist server files (HytaleServer.jar, Assets.zip, etc.) to avoid re-download
       - hytale-server-files:/server/server-files
       # Persist world data between restarts
       - hytale-universe:/server/universe
       # Persist mods
       - hytale-mods:/server/mods
-      # Persist server configuration
+      # Persist server configuration (includes server auth credentials)
       - hytale-config:/server/config
       # Persist AOT cache
       - hytale-aot-cache:/server/.aot-cache

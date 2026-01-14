@@ -21,15 +21,14 @@ services:
     
     # Persistent storage
     volumes:
-      # Credentials (bind mounts for security)
+      # Credentials for downloader (bind mount)
       - ./.hytale-downloader-credentials.json:/server/.hytale-downloader-credentials.json:ro
-      - ./.hytale-server-credentials.json:/server/.hytale-server-credentials.json
       
       # Server data (named volumes)
       - hytale-server-files:/server/server-files    # Server JAR and assets
       - hytale-universe:/server/universe            # World data
       - hytale-mods:/server/mods                    # Mods
-      - hytale-config:/server/config                # Configuration
+      - hytale-config:/server/config                # Configuration + server auth credentials
       - hytale-aot-cache:/server/.aot-cache         # Java AOT cache
     
     # Required for interactive authentication

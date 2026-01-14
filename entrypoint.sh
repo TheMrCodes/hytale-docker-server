@@ -63,7 +63,7 @@ ENABLE_AOT="${ENABLE_AOT:-true}"
 SKIP_UPDATE_CHECK="${SKIP_UPDATE_CHECK:-false}"
 
 CREDENTIALS_FILE="${CREDENTIALS_FILE:-/server/.hytale-downloader-credentials.json}"
-SERVER_CREDENTIALS_FILE="${SERVER_CREDENTIALS_FILE:-/server/.hytale-server-credentials.json}"
+SERVER_CREDENTIALS_FILE="${SERVER_CREDENTIALS_FILE:-/server/config/.hytale-server-credentials.json}"
 DISCORD_WEBHOOK_URL="${DISCORD_WEBHOOK_URL:-}"
 CURRENT_VERSION_FILE="${CURRENT_VERSION_FILE:-/server/server-files/.current-version}"
 CONFIG_DIR="${CONFIG_DIR:-/server/config}"
@@ -120,6 +120,17 @@ validate_prerequisites() {
 
     # Try to set secure permissions (may fail on bind mounts with different ownership)
     chmod 600 "$CREDENTIALS_FILE" 2>/dev/null || true
+
+    # Handle server credentials file
+    # If Docker created a directory (because file didn't exist), remove it and create file
+    if [ -d "$SERVER_CREDENTIALS_FILE" ]; then
+        rmdir "$SERVER_CREDENTIALS_FILE" 2>/dev/null || true
+    fi
+    # Ensure file exists with valid JSON
+    if [ ! -f "$SERVER_CREDENTIALS_FILE" ]; then
+        echo '{}' > "$SERVER_CREDENTIALS_FILE"
+        chmod 600 "$SERVER_CREDENTIALS_FILE" 2>/dev/null || true
+    fi
 
     if ! command -v java >/dev/null 2>&1; then
         log_error "Java is not installed"
