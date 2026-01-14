@@ -128,7 +128,80 @@ All configuration is done via the `.env` file:
 | `AUTH_MODE` | `authenticated` | `authenticated` or `open` |
 | `UPDATE_MODE` | `auto` | `auto`, `always`, or `never` |
 | `ENABLE_AOT` | `true` | Enable Java AOT caching |
+| `SKIP_UPDATE_CHECK` | `false` | Skip hytale-downloader self-update |
 | `DISCORD_WEBHOOK_URL` | *(empty)* | Discord webhook for auth notifications |
+
+### Server Identity
+
+```bash
+# Display name shown in server browser
+SERVER_NAME=My Awesome Server
+
+# Optional password to restrict access (leave empty for public)
+SERVER_PASSWORD=secretpassword
+```
+
+### Player Settings
+
+```bash
+# Maximum concurrent players (adjust based on server resources)
+MAX_PLAYERS=20
+
+# Chunk view distance (higher = more visible terrain, more memory/CPU)
+VIEW_DISTANCE=12
+```
+
+### Memory Allocation
+
+```bash
+# Java heap size in megabytes
+# Recommended: 4096+ for production, adjust based on available RAM
+MEMORY_MB=4096
+```
+
+The server uses G1GC garbage collector with optimized settings. Allocate at least 4GB for smooth gameplay.
+
+### Authentication Mode
+
+```bash
+# authenticated: Players must have valid Hytale accounts (default, recommended)
+AUTH_MODE=authenticated
+
+# open: No authentication required (for local testing only)
+AUTH_MODE=open
+```
+
+### Update Mode
+
+```bash
+# auto: Check for updates on startup, download if newer version available (recommended)
+UPDATE_MODE=auto
+
+# always: Force re-download server files on every startup
+UPDATE_MODE=always
+
+# never: Never download, use existing files only (for offline/airgapped servers)
+UPDATE_MODE=never
+```
+
+### Performance Options
+
+```bash
+# Enable Java AOT (Ahead-of-Time) caching for faster startup
+# First boot is slower while cache builds, subsequent boots are faster
+ENABLE_AOT=true
+
+# Skip hytale-downloader self-update check (speeds up startup slightly)
+SKIP_UPDATE_CHECK=false
+```
+
+### Discord Integration
+
+```bash
+# Discord webhook URL for authentication notifications
+# When running headless (docker compose up -d), auth links are sent here
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/123456789/abcdefg...
+```
 
 ## Discord Webhook Setup
 
